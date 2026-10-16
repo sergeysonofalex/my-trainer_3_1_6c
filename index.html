@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>⌨️ Горячие клавиши — тренажёр с иконками</title>
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+html, body { height: 100%; }
+body {
+  font-family: "Segoe UI", Tahoma, Verdana, sans-serif;
+  font-size: 17px;
+  line-height: 1.4;
+  color: #12395e;
+  background: linear-gradient(160deg, #E3F2FD 0%, #E8F5E9 55%, #FFF8E1 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  padding: 10px 10px 24px;
+  max-width: 560px;
+  margin: 0 auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  overflow-x: hidden;
+}
+input, textarea { user-select: text; -webkit-user-select: text; }
+
+.screen { display: none; }
+.screen.active { display: block; animation: fadeIn .3s ease-out; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  background: #fff;
+  border-radius: 22px;
+  padding: 18px 16px 20px;
+  box-shadow: 0 8px 22px rgba(21, 101, 192, 0.13);
+  margin-bottom: 12px;
+  border: 2px solid #E3F2FD;
+}
+
+h1 { font-size: 24px; text-align: center; color: #1565C0; margin-bottom: 4px; line-height: 1.2; }
+h2 { font-size: 21px; color: #1565C0; margin-bottom: 12px; text-align: center; }
+.subtitle { font-size: 15px; text-align: center; color: #546E7A; margin-bottom: 14px; font-weight: 600; }
+
+.big-emoji {
+  font-size: 64px; text-align: center; line-height: 1;
+  margin-bottom: 4px; animation: floatBob 2.6s ease-in-out infinite;
+}
+@keyframes floatBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+
+/* ---------- КНОПКИ ---------- */
+.btn {
+  display: block; width: 100%;
+  font-family: inherit; font-size: 19px; font-weight: 800;
+  border: none; border-radius: 16px; padding: 15px 18px;
+  cursor: pointer; color: #fff; background: #2196F3;
+  box-shadow: 0 4px 0 #1565C0; margin-top: 12px; text-align: center;
+  min-height: 56px; transition: transform .1s, box-shadow .1s, background .15s;
+}
+.btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 #1565C0; }
+.btn.green  { background: #4CAF50; box-shadow: 0 4px 0 #2E7D32; }
+.btn.green:active:not(:disabled)  { box-shadow: 0 1px 0 #2E7D32; }
+.btn.orange { background: #FF9800; box-shadow: 0 4px 0 #EF6C00; }
+.btn.orange:active:not(:disabled) { box-shadow: 0 1px 0 #EF6C00; }
+.btn:disabled { background: #B0BEC5; box-shadow: 0 4px 0 #90A4AE; opacity: .8; cursor: not-allowed; }
+
+/* ---------- ВХОД ---------- */
+.label { display: block; text-align: center; font-size: 16px; font-weight: 700; color: #2E7D32; margin-bottom: 8px; }
+#nameInput {
+  width: 100%; font-family: inherit; font-size: 20px; font-weight: 700;
+  text-align: center; padding: 14px 16px; border: 3px solid #4CAF50;
+  border-radius: 16px; background: #E8F5E9; color: #1B5E20; outline: none;
+  transition: box-shadow .2s;
+}
+#nameInput:focus { box-shadow: 0 0 0 5px rgba(76, 175, 80, .22); }
+
+/* ---------- КЛАВИШИ (KEYCAPS) ---------- */
+.keys { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 3px; }
+.keycap {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 46px; height: 46px; padding: 0 12px;
+  background: linear-gradient(180deg, #ffffff 0%, #eceff1 42%, #cfd8dc 100%);
+  border: 1px solid #90a4ae;
+  border-bottom: 5px solid #607d8b;
+  border-radius: 9px;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-weight: 800; font-size: 16px; color: #263238;
+  text-shadow: 0 1px 0 rgba(255,255,255,.95);
+  box-shadow: 0 3px 6px rgba(0,0,0,.15), inset 0 1px 0 #fff, inset 0 -1px 0 rgba(0,0,0,.06);
+  line-height: 1; white-space: nowrap;
+}
+.keycap.wide { min-width: 68px; font-size: 15px; letter-spacing: .5px; }
+.keycap.sm {
+  min-width: 36px; height: 38px; padding: 0 9px; font-size: 13.5px;
+  border-bottom-width: 4px; border-radius: 7px;
+}
+.keycap.sm.wide { min-width: 54px; font-size: 13px; }
+.plus { font-weight: 900; font-size: 20px; color: #546E7A; margin: 0 5px; }
+.keys.sm .plus { font-size: 16px; margin: 0 3px; }
+
+/* ---------- ПАМЯТКА ---------- */
+.memo-hint { font-size: 15px; text-align: center; color: #546E7A; margin-bottom: 12px; font-weight: 600; }
+.memo-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 6px; border-bottom: 1px dashed #E3F2FD;
+}
+.memo-row:last-child { border-bottom: none; }
+.memo-icon {
+  font-size: 26px; line-height: 1; width: 58px; text-align: center;
+  flex-shrink: 0;
+}
+.memo-body { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.memo-keys { margin-bottom: 2px; }
+.memo-action { font-size: 16px; font-weight: 800; color: #1565C0; }
+.memo-desc { font-size: 13px; color: #78909C; font-weight: 600; }
+
+/* ---------- HUD ---------- */
+.hud {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff; border: 2px solid #E3F2FD;
+  border-radius: 18px; padding: 9px 12px; margin-bottom: 10px;
+  box-shadow: 0 4px 12px rgba(21,101,192,.09);
+}
+.hud-avatar { font-size: 30px; line-height: 1; transition: transform .25s; }
+.hud-avatar.bounce { animation: avatarBounce .5s ease-out; }
+@keyframes avatarBounce {
+  0%   { transform: scale(1) rotate(0); }
+  40%  { transform: scale(1.35) rotate(-12deg); }
+  70%  { transform: scale(1.15) rotate(8deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+.hud-name {
+  flex: 1; font-weight: 800; font-size: 15px; color: #2E7D32;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.hud-stats { display: flex; gap: 6px; }
+.hud-pill {
+  font-size: 14px; font-weight: 900; padding: 5px 10px;
+  border-radius: 999px; line-height: 1; white-space: nowrap;
+}
+.star-pill { background: #FFF8E1; color: #F57F17; border: 2px solid #FFD54F; }
+.star-pill.pop { animation: popScale .4s ease-out; }
+.fire-pill { background: #FFF3E0; color: #E65100; border: 2px solid #FFB74D; }
+.fire-pill.pop { animation: popScale .4s ease-out; }
+.fire-pill.hot {
+  background: #FFEBEE; color: #C62828; border-color: #EF5350;
+  animation: fireGlow 1s ease-in-out infinite alternate;
+}
+@keyframes popScale {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+@keyframes fireGlow {
+  from { box-shadow: 0 0 0 rgba(239,83,80,0); }
+  to   { box-shadow: 0 0 14px rgba(239,83,80,.65); }
+}
+
+/* ---------- ПРОГРЕСС-ТОЧКИ ---------- */
+.dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 12px; }
+.dot {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #E0E0E0; border: 2px solid #BDBDBD;
+  transition: all .3s ease;
+}
+.dot.done  { background: #4CAF50; border-color: #2E7D32; transform: scale(1.05); }
+.dot.wrong { background: #E53935; border-color: #B71C1C; }
+.dot.current {
+  background: #2196F3; border-color: #1565C0;
+  animation: dotPulse 1.2s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(33,150,243,0); }
+  50%      { transform: scale(1.2); box-shadow: 0 0 10px rgba(33,150,243,.6); }
+}
+
+/* ---------- ВЕРХ ЗАДАНИЯ С ПОДСКАЗКОЙ ---------- */
+.task-top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-bottom: 12px;
+}
+.task-progress {
+  font-size: 13px; font-weight: 800; color: #1565C0;
+  text-transform: uppercase; letter-spacing: .4px;
+}
+.hint-btn {
+  font-family: inherit; font-size: 14px; font-weight: 800;
+  color: #6A1B9A; background: #EDE7F6;
+  border: 2px solid #B39DDB; border-radius: 999px;
+  padding: 7px 14px; cursor: pointer; white-space: nowrap;
+  transition: all .15s; display: inline-flex; align-items: center; gap: 5px;
+  line-height: 1;
+}
+.hint-btn:active:not(:disabled) { transform: translateY(2px); }
+.hint-btn:disabled {
+  opacity: .65; cursor: not-allowed;
+  background: #ECEFF1; border-color: #CFD8DC; color: #90A4AE;
+}
+.hint-btn.spent {
+  background: #FFF8E1; border-color: #FFD54F; color: #EF6C00;
+}
+
+/* ---------- БЛОК ПОДСКАЗКИ (с текстом) ---------- */
+.hint-box {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  background: #FFFDE7;
+  border: 3px dashed #FFD54F;
+  border-radius: 14px;
+  font-size: 15.5px; font-weight: 700; color: #795548;
+  line-height: 1.4;
+  display: flex; gap: 10px; align-items: flex-start;
+  animation: popScale .35s ease-out;
+}
+.hint-box .hint-icon {
+  font-size: 28px; line-height: 1; flex-shrink: 0;
+}
+.hint-box .hint-text { flex: 1; }
+
+/* ---------- ИКОНКА НА ВОПРОСЕ (без текста) ---------- */
+.q-icon-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 4px 0 12px;
+}
+.q-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #FFFDE7 0%, #FFF8E1 55%, #FFE082 100%);
+  border: 4px solid #FFD54F;
+  box-shadow:
+    0 8px 18px rgba(255, 193, 7, .35),
+    inset 0 -4px 0 rgba(0,0,0,.05);
+  font-size: 52px;
+  line-height: 1;
+  animation: iconFloat 3s ease-in-out infinite;
+}
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50%      { transform: translateY(-6px) rotate(-2deg); }
+}
+
+/* ---------- ЗАДАНИЕ ---------- */
+.task-q {
+  font-size: 18px; font-weight: 800;
+  margin: 6px 0 14px; line-height: 1.35; text-align: center;
+}
+.keys-display {
+  display: flex; justify-content: center;
+  margin: 8px 0 6px; flex-wrap: wrap;
+}
+.options {
+  display: flex; flex-direction: column; gap: 10px; margin-top: 8px;
+}
+.option {
+  width: 100%; text-align: left; font-family: inherit;
+  font-size: 17px; font-weight: 700; padding: 14px 16px;
+  border-radius: 14px; border: 3px solid #90CAF9;
+  background: #F1F8FF; color: #12395e; min-height: 56px;
+  cursor: pointer; transition: background .15s, border-color .15s, transform .1s;
+  display: flex; align-items: center; gap: 10px;
+}
+.option:active:not(:disabled) { background: #E1F0FF; transform: scale(.99); }
+.option.correct {
+  background: #C8E6C9; border-color: #2E7D32; color: #1B5E20;
+  animation: popScale .4s ease-out;
+}
+.option.wrong {
+  background: #FFCDD2; border-color: #E53935; color: #B71C1C;
+  animation: shake .45s;
+}
+.option:disabled { opacity: .95; cursor: default; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-8px); }
+  40%      { transform: translateX(8px); }
+  60%      { transform: translateX(-5px); }
+  80%      { transform: translateX(5px); }
+}
+
+.opt-badge {
+  display: inline-flex; width: 32px; height: 32px;
+  border-radius: 50%; background: #E3F2FD; color: #1565C0;
+  align-items: center; justify-content: center;
+  font-weight: 900; font-size: 15px; flex-shrink: 0;
+  border: 2px solid #90CAF9; line-height: 1;
+}
+.option.correct .opt-badge { background: #A5D6A7; color: #1B5E20; border-color: #2E7D32; }
+.option.wrong   .opt-badge { background: #EF9A9A; color: #B71C1C; border-color: #E53935; }
+
+.opt-content {
+  flex: 1; display: flex; align-items: center;
+  gap: 10px; flex-wrap: wrap; min-width: 0;
+}
+.opt-icon { font-size: 22px; line-height: 1; flex-shrink: 0; }
+.opt-text { flex: 1; min-width: 0; }
+
+/* ---------- ОБРАТНАЯ СВЯЗЬ ---------- */
+.feedback {
+  margin-top: 14px; padding: 14px 15px; border-radius: 14px;
+  font-size: 17px; font-weight: 800; line-height: 1.35;
+  text-align: center; animation: popScale .35s ease-out;
+}
+.feedback.ok { background: #E8F5E9; border: 3px solid #4CAF50; color: #1B5E20; }
+.feedback.no { background: #FFEBEE; border: 3px solid #E53935; color: #B71C1C; }
+
+/* ---------- РЕЗУЛЬТАТ ---------- */
+.result-name {
+  font-size: 22px; font-weight: 900; color: #2E7D32;
+  background: #E8F5E9; border: 3px solid #4CAF50;
+  border-radius: 16px; padding: 12px 16px;
+  text-align: center; margin-bottom: 14px;
+}
+.result-stars {
+  text-align: center; font-size: 32px; letter-spacing: 4px;
+  line-height: 1.2; margin-bottom: 6px;
+}
+.result-score {
+  font-size: 54px; font-weight: 900; color: #1565C0;
+  text-align: center; line-height: 1;
+}
+.result-of {
+  font-size: 17px; text-align: center; color: #546E7A;
+  margin-top: -2px; margin-bottom: 12px; font-weight: 700;
+}
+.rank {
+  text-align: center; padding: 16px 14px; border-radius: 18px;
+  border: 3px solid; margin: 12px 0;
+  animation: fadeIn .5s ease-out;
+}
+.rank-icon { font-size: 52px; line-height: 1; margin-bottom: 4px; }
+.rank-name { font-size: 20px; font-weight: 900; margin-bottom: 4px; }
+.rank-text { font-size: 15px; line-height: 1.4; font-weight: 600; }
+.best-streak {
+  text-align: center; font-size: 16px; font-weight: 800;
+  color: #E65100; background: #FFF3E0;
+  border: 2px solid #FFB74D; border-radius: 14px;
+  padding: 10px; margin-bottom: 8px;
+}
+
+/* ---------- АНИМАЦИЯ ЗВЁЗД ---------- */
+.floater {
+  position: fixed; pointer-events: none; font-size: 36px;
+  z-index: 999; animation: floatUp 1.1s ease-out forwards;
+}
+@keyframes floatUp {
+  0%   { opacity: 1; transform: translateY(0) scale(.6) rotate(0); }
+  40%  { opacity: 1; transform: translateY(-40px) scale(1.3) rotate(15deg); }
+  100% { opacity: 0; transform: translateY(-110px) scale(1.5) rotate(-10deg); }
+}
+
+/* ---------- СЕРИЯ-ТОСТ ---------- */
+.streak-toast {
+  position: fixed; left: 50%; top: 22%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #FF6B00, #FFD54F);
+  color: #fff; font-size: 20px; font-weight: 900;
+  padding: 12px 24px; border-radius: 999px;
+  box-shadow: 0 10px 26px rgba(255,107,0,.45);
+  z-index: 1000; pointer-events: none;
+  animation: toastPop 1.4s ease-out forwards;
+  white-space: nowrap;
+}
+@keyframes toastPop {
+  0%   { opacity: 0; transform: translateX(-50%) scale(.4); }
+  20%  { opacity: 1; transform: translateX(-50%) scale(1.12); }
+  75%  { opacity: 1; transform: translateX(-50%) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) scale(.9) translateY(-20px); }
+}
+
+.hidden { display: none !important; }
+
+@media (max-width: 380px) {
+  body { font-size: 16px; padding: 8px 8px 20px; }
+  .keycap { min-width: 40px; height: 42px; font-size: 15px; padding: 0 10px; }
+  .keycap.wide { min-width: 58px; font-size: 14px; }
+  .keycap.sm { min-width: 32px; height: 34px; font-size: 12.5px; padding: 0 8px; }
+  .keycap.sm.wide { min-width: 48px; font-size: 12px; }
+  .task-q { font-size: 17px; }
+  .option { font-size: 16px; padding: 13px 14px; }
+  h1 { font-size: 21px; }
+  .memo-icon { width: 48px; font-size: 22px; }
+  .q-icon { width: 80px; height: 80px; font-size: 42px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ ЭКРАН 1: ВХОД ============ -->
+<div id="screenLogin" class="screen active">
+  <div class="card">
+    <div class="big-emoji">⌨️</div>
+    <h1>Горячие клавиши</h1>
+    <p class="subtitle">Тренажёр для 3 класса · 10 заданий</p>
+    <label class="label" for="nameInput">Введи своё имя:</label>
+    <input id="nameInput" type="text" maxlength="20" autocomplete="off" spellcheck="false">
+    <button id="startBtn" class="btn green" disabled>🚀 Начать игру</button>
+  </div>
+</div>
+
+<!-- ============ ЭКРАН 2: ПАМЯТКА ============ -->
+<div id="screenMemo" class="screen">
+  <div class="card">
+    <h2>📖 Памятка</h2>
+    <p class="memo-hint">Запомни клавиши и их значки — они будут в игре!</p>
+    <div id="memoList"></div>
+  </div>
+  <button id="toTasksBtn" class="btn green">🎮 Начать игру</button>
+</div>
+
+<!-- ============ ЭКРАН 3: ЗАДАНИЯ ============ -->
+<div id="screenTask" class="screen">
+  <div class="hud">
+    <div class="hud-avatar" id="avatar">😐</div>
+    <div class="hud-name" id="hudName">Ученик</div>
+    <div class="hud-stats">
+      <div class="hud-pill star-pill" id="starPill">⭐ <span id="starsCount">0</span>/10</div>
+      <div class="hud-pill fire-pill" id="firePill">🔥 <span id="streakCount">0</span></div>
+    </div>
+  </div>
+  <div class="dots" id="dots"></div>
+  <div class="card">
+    <div class="task-top">
+      <div class="task-progress" id="taskProgress">🎯 Задание 1 из 10</div>
+      <button class="hint-btn" id="hintBtn">💡 <span>Подсказка</span> <b id="hintCount">3</b></button>
+    </div>
+    <div id="hintBox" class="hint-box hidden"></div>
+    <div id="taskBox"></div>
+    <div id="feedbackBox" class="feedback hidden"></div>
+    <button id="nextBtn" class="btn green hidden">➡️ Далее</button>
+  </div>
+</div>
+
+<!-- ============ ЭКРАН 4: РЕЗУЛЬТАТ ============ -->
+<div id="screenResult" class="screen">
+  <div class="card" id="resultBox"></div>
+</div>
+
+<script>
+/* ====================================================
+   ЗАЩИТА ОТ КОНТЕКСТНОГО МЕНЮ
+   ==================================================== */
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+
+/* ====================================================
+   ПОМОЩНИКИ
+   ==================================================== */
+function $(id) { return document.getElementById(id); }
+
+function shuffle(arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+
+function escapeHTML(s) {
+  return String(s).replace(/[&<>"']/g, function(c) {
+    return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+  });
+}
+
+/* Рисует комбинацию клавиш как настоящие клавиши клавиатуры */
+function keyComboHTML(keys, small) {
+  var sz = small ? ' sm' : '';
+  var html = '<span class="keys' + (small ? ' sm' : '') + '">';
+  for (var i = 0; i < keys.length; i++) {
+    if (i > 0) html += '<span class="plus">+</span>';
+    var k = keys[i];
+    var cls = 'keycap' + (k.length > 1 ? ' wide' : '') + sz;
+    html += '<span class="' + cls + '">' + escapeHTML(k) + '</span>';
+  }
+  html += '</span>';
+  return html;
+}
+
+/* Иконки для каждой клавиши (для вариантов ответа) */
+var KEY_ICONS = {
+  'C': '📄📄',
+  'V': '📋',
+  'X': '✂️',
+  'Z': '↩️',
+  'S': '💾',
+  'A': '🔲'
+};
+
+/* ====================================================
+   ЗАДАНИЯ
+   qIcon  — иконка на самом вопросе (без текста)
+   hint   — текстовая подсказка по кнопке 💡
+   ==================================================== */
+var TASKS = [
+  {
+    keys: ['Ctrl', 'C'],
+    qIcon: '📄📄',
+    q: 'Что делает эта комбинация?',
+    options: ['Копирует выделенное', 'Вставляет текст', 'Вырезает текст', 'Сохраняет документ'],
+    correct: 'Копирует выделенное',
+    hintIcon: '📄📄',
+    hint: 'Буква C — от английского Copy («копировать»). Значок команды — двойные листочки.'
+  },
+  {
+    keys: ['Ctrl', 'V'],
+    qIcon: '📋',
+    q: 'Что делает эта комбинация?',
+    options: ['Вставляет из буфера', 'Копирует текст', 'Отменяет действие', 'Выделяет всё'],
+    correct: 'Вставляет из буфера',
+    hintIcon: '📋',
+    hint: 'После копирования текст лежит в буфере обмена. Достать его поможет эта комбинация. Значок — планшет с зажимом.'
+  },
+  {
+    keys: ['Ctrl', 'X'],
+    qIcon: '✂️',
+    q: 'Что делает эта комбинация?',
+    options: ['Вырезает выделенное', 'Копирует текст', 'Сохраняет документ', 'Отменяет действие'],
+    correct: 'Вырезает выделенное',
+    hintIcon: '✂️',
+    hint: 'Буква X похожа на ножницы — они отрезают текст с прежнего места и кладут в буфер.'
+  },
+  {
+    keys: ['Ctrl', 'Z'],
+    qIcon: '↩️',
+    q: 'Что делает эта комбинация?',
+    options: ['Отменяет последнее действие', 'Сохраняет документ', 'Вставляет текст', 'Выделяет всё'],
+    correct: 'Отменяет последнее действие',
+    hintIcon: '↩️',
+    hint: 'Z — последняя буква алфавита: она делает «шаг назад» и возвращает всё как было.'
+  },
+  {
+    keys: ['Ctrl', 'S'],
+    qIcon: '💾',
+    q: 'Что делает эта комбинация?',
+    options: ['Сохраняет документ', 'Отменяет действие', 'Копирует текст', 'Вырезает текст'],
+    correct: 'Сохраняет документ',
+    hintIcon: '💾',
+    hint: 'Буква S — от английского Save («сохранять»). Значок команды — дискета.'
+  },
+  {
+    keys: ['Ctrl', 'A'],
+    qIcon: '🔲',
+    q: 'Что делает эта комбинация?',
+    options: ['Выделяет весь текст', 'Копирует весь текст', 'Удаляет текст', 'Сохраняет текст'],
+    correct: 'Выделяет весь текст',
+    hintIcon: '🔲',
+    hint: 'Буква A — от английского All («все»). Команда выделяет сразу весь текст.'
+  },
+  {
+    keys: ['Ctrl', 'C'],
+    qIcon: '📄📄',
+    q: 'Верно ли, что эта комбинация копирует текст?',
+    options: ['Верно', 'Неверно'],
+    correct: 'Верно',
+    hintIcon: '📄📄',
+    hint: 'Вспомни: C — Copy. Значок — двойные листочки. Значит, комбинация действительно копирует.'
+  },
+  {
+    keys: ['Ctrl', 'Z'],
+    qIcon: '↩️',
+    q: 'Верно ли, что эта комбинация сохраняет документ?',
+    options: ['Верно', 'Неверно'],
+    correct: 'Неверно',
+    hintIcon: '↩️',
+    hint: 'Ctrl+Z — отмена (волшебная стрелка назад). А сохраняет другая буква — S (Save).'
+  },
+  {
+    qIcon: '📋',
+    q: 'Какая комбинация ВСТАВЛЯЕТ текст?',
+    options: ['Ctrl+V', 'Ctrl+C', 'Ctrl+X', 'Ctrl+S'],
+    correct: 'Ctrl+V',
+    hintIcon: '📋',
+    hint: 'Вставка — это планшет с зажимом 📋. Смотрим в памятку: вставляет комбинация с буквой V.'
+  },
+  {
+    qIcon: '↩️',
+    q: 'Какая комбинация ОТМЕНЯЕТ последнее действие?',
+    options: ['Ctrl+Z', 'Ctrl+S', 'Ctrl+A', 'Ctrl+X'],
+    correct: 'Ctrl+Z',
+    hintIcon: '↩️',
+    hint: 'Отмена — это волшебная стрелка назад. Какая буква у неё в паре? Z.'
+  }
+];
+
+/* ====================================================
+   СОСТОЯНИЕ ИГРЫ
+   ==================================================== */
+var TOTAL_HINTS = 3;
+
+var state = {
+  name: '',
+  current: 0,
+  correct: 0,
+  streak: 0,
+  bestStreak: 0,
+  hintsLeft: TOTAL_HINTS,
+  hintUsedThisTask: false,
+  answered: false,
+  results: []
+};
+
+/* ====================================================
+   ВХОД
+   ==================================================== */
+var nameInput = $('nameInput');
+var startBtn  = $('startBtn');
+
+nameInput.addEventListener('input', function() {
+  startBtn.disabled = nameInput.value.trim().length === 0;
+});
+nameInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !startBtn.disabled) startBtn.click();
+});
+
+startBtn.addEventListener('click', function() {
+  var v = nameInput.value.trim();
+  if (!v) return;
+  state.name = v;
+  $('hudName').textContent = v;
+  showScreen('screenMemo');
+});
+
+function showScreen(id) {
+  var all = document.querySelectorAll('.screen');
+  for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
+  $(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+/* ====================================================
+   ПАМЯТКА С ИКОНКАМИ
+   ==================================================== */
+var MEMO = [
+  { keys: ['Ctrl', 'C'], icon: '📄📄', action: 'Копировать',   desc: 'Создаёт копию' },
+  { keys: ['Ctrl', 'V'], icon: '📋',   action: 'Вставить',     desc: 'Достаёт из буфера' },
+  { keys: ['Ctrl', 'X'], icon: '✂️',   action: 'Вырезать',     desc: 'Убирает с места' },
+  { keys: ['Ctrl', 'Z'], icon: '↩️',   action: 'Отменить',     desc: 'Возвращает назад' },
+  { keys: ['Ctrl', 'S'], icon: '💾',   action: 'Сохранить',    desc: 'Записывает в файл' },
+  { keys: ['Ctrl', 'A'], icon: '🔲',   action: 'Выделить всё', desc: 'Берёт весь текст' }
+];
+
+function renderMemo() {
+  var html = '';
+  MEMO.forEach(function(m) {
+    html +=
+      '<div class="memo-row">' +
+        '<div class="memo-icon">' + m.icon + '</div>' +
+        '<div class="memo-body">' +
+          '<div class="memo-keys">' + keyComboHTML(m.keys, true) + '</div>' +
+          '<div class="memo-action">' + m.action + '</div>' +
+          '<div class="memo-desc">' + m.desc + '</div>' +
+        '</div>' +
+      '</div>';
+  });
+  $('memoList').innerHTML = html;
+}
+renderMemo();
+
+$('toTasksBtn').addEventListener('click', function() {
+  showScreen('screenTask');
+  state.current = 0;
+  state.correct = 0;
+  state.streak = 0;
+  state.bestStreak = 0;
+  state.hintsLeft = TOTAL_HINTS;
+  state.results = [];
+  renderDots();
+  renderTask();
+});
+
+/* ====================================================
+   ПРОГРЕСС-ТОЧКИ
+   ==================================================== */
+function renderDots() {
+  var html = '';
+  for (var i = 0; i < TASKS.length; i++) {
+    var cls = 'dot';
+    if (i < state.results.length) {
+      cls += state.results[i] ? ' done' : ' wrong';
+    } else if (i === state.results.length) {
+      cls += ' current';
+    }
+    html += '<div class="' + cls + '"></div>';
+  }
+  $('dots').innerHTML = html;
+}
+
+/* ====================================================
+   АВАТАР ПО СЕРИИ
+   ==================================================== */
+function avatarForStreak(s) {
+  if (s >= 5) return '🤩';
+  if (s >= 3) return '😄';
+  if (s >= 2) return '😊';
+  if (s >= 1) return '🙂';
+  return '😐';
+}
+
+function updateHUD() {
+  $('starsCount').textContent = state.correct;
+  $('streakCount').textContent = state.streak;
+
+  var av = avatarForStreak(state.streak);
+  var el = $('avatar');
+  if (el.textContent !== av) {
+    el.textContent = av;
+    el.classList.remove('bounce');
+    void el.offsetWidth;
+    el.classList.add('bounce');
+  }
+
+  var fp = $('firePill');
+  if (state.streak >= 3) fp.classList.add('hot');
+  else fp.classList.remove('hot');
+}
+
+/* ====================================================
+   ЭФФЕКТЫ
+   ==================================================== */
+function celebrate(count) {
+  var pool = ['⭐', '✨', '🌟', '💫', '🎉', '🎊', '🌈', '💎', '🏅'];
+  for (var i = 0; i < count; i++) {
+    (function(i) {
+      setTimeout(function() {
+        var s = document.createElement('div');
+        s.className = 'floater';
+        s.textContent = pool[Math.floor(Math.random() * pool.length)];
+        s.style.left = (10 + Math.random() * 80) + '%';
+        s.style.top  = (35 + Math.random() * 30) + '%';
+        s.style.fontSize = (26 + Math.random() * 22) + 'px';
+        document.body.appendChild(s);
+        setTimeout(function() { s.remove(); }, 1200);
+      }, i * 70);
+    })(i);
+  }
+}
+
+function showStreakToast(n) {
+  var t = document.createElement('div');
+  t.className = 'streak-toast';
+  t.textContent = '🔥 СЕРИЯ × ' + n + '!';
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 1500);
+}
+
+/* ====================================================
+   ПОДСКАЗКИ
+   ==================================================== */
+function updateHintButton() {
+  var btn = $('hintBtn');
+  $('hintCount').textContent = state.hintsLeft;
+
+  if (state.hintsLeft <= 0) {
+    btn.disabled = true;
+    btn.classList.add('spent');
+    btn.querySelector('span').textContent = 'Нет подсказок';
+  } else if (state.hintUsedThisTask) {
+    btn.disabled = true;
+    btn.classList.add('spent');
+    btn.querySelector('span').textContent = 'Использована';
+  } else {
+    btn.disabled = false;
+    btn.classList.remove('spent');
+    btn.querySelector('span').textContent = 'Подсказка';
+  }
+}
+
+$('hintBtn').addEventListener('click', function() {
+  if (state.hintsLeft <= 0 || state.hintUsedThisTask || state.answered) return;
+
+  var t = TASKS[state.current];
+  state.hintsLeft--;
+  state.hintUsedThisTask = true;
+
+  var box = $('hintBox');
+  box.innerHTML =
+    '<span class="hint-icon">' + t.hintIcon + '</span>' +
+    '<span class="hint-text">' + escapeHTML(t.hint) + '</span>';
+  box.classList.remove('hidden');
+
+  updateHintButton();
+});
+
+/* ====================================================
+   ОТОБРАЖЕНИЕ ВАРИАНТА
+   ==================================================== */
+function optionHTML(opt, displayIdx) {
+  var m = opt.match(/^Ctrl\+([A-Z])$/);
+  if (m) {
+    var letter = m[1];
+    var icon = KEY_ICONS[letter] || '';
+    return '<span class="opt-content">' +
+             keyComboHTML(['Ctrl', letter], true) +
+             '<span class="opt-icon">' + icon + '</span>' +
+           '</span>';
+  }
+  if (opt === 'Верно') {
+    return '<span class="opt-content">' +
+             '<span class="opt-icon">✅</span>' +
+             '<span class="opt-text">Верно</span>' +
+           '</span>';
+  }
+  if (opt === 'Неверно') {
+    return '<span class="opt-content">' +
+             '<span class="opt-icon">❌</span>' +
+             '<span class="opt-text">Неверно</span>' +
+           '</span>';
+  }
+  var letters = ['A', 'B', 'C', 'D'];
+  return '<span class="opt-badge">' + letters[displayIdx] + '</span>' +
+         '<span class="opt-content"><span class="opt-text">' + escapeHTML(opt) + '</span></span>';
+}
+
+/* ====================================================
+   РЕНДЕР ЗАДАНИЯ
+   ==================================================== */
+function renderTask() {
+  state.answered = false;
+  state.hintUsedThisTask = false;
+
+  $('feedbackBox').classList.add('hidden');
+  $('nextBtn').classList.add('hidden');
+  $('hintBox').classList.add('hidden');
+  $('hintBox').innerHTML = '';
+
+  var t = TASKS[state.current];
+  $('taskProgress').textContent = '🎯 Задание ' + (state.current + 1) + ' из ' + TASKS.length;
+
+  updateHintButton();
+
+  var box = $('taskBox');
+  box.innerHTML = '';
+
+  /* --- 1. Иконка-подсказка на самом вопросе (без текста) --- */
+  if (t.qIcon) {
+    var iw = document.createElement('div');
+    iw.className = 'q-icon-wrap';
+    iw.innerHTML = '<div class="q-icon">' + t.qIcon + '</div>';
+    box.appendChild(iw);
+  }
+
+  /* --- 2. Клавиши крупно (если есть) --- */
+  if (t.keys) {
+    var kd = document.createElement('div');
+    kd.className = 'keys-display';
+    kd.innerHTML = keyComboHTML(t.keys, false);
+    box.appendChild(kd);
+  }
+
+  /* --- 3. Вопрос --- */
+  var qEl = document.createElement('div');
+  qEl.className = 'task-q';
+  qEl.textContent = t.q;
+  box.appendChild(qEl);
+
+  /* --- 4. Варианты ответа --- */
+  var wrap = document.createElement('div');
+  wrap.className = 'options';
+
+  var shuffled = shuffle(t.options.slice());
+
+  shuffled.forEach(function(opt, idx) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'option';
+    b.dataset.value = opt;
+    b.innerHTML = optionHTML(opt, idx);
+
+    b.addEventListener('click', function() { handleAnswer(opt, b, wrap); });
+    wrap.appendChild(b);
+  });
+
+  box.appendChild(wrap);
+  renderDots();
+  updateHUD();
+  window.scrollTo(0, 0);
+}
+
+/* ====================================================
+   ОБРАБОТКА ОТВЕТА
+   ==================================================== */
+function handleAnswer(opt, btn, wrap) {
+  if (state.answered) return;
+  state.answered = true;
+
+  var t = TASKS[state.current];
+  var ok = (opt === t.correct);
+
+  var all = wrap.querySelectorAll('.option');
+  for (var i = 0; i < all.length; i++) {
+    all[i].disabled = true;
+    if (all[i].dataset.value === t.correct) all[i].classList.add('correct');
+  }
+  if (!ok) btn.classList.add('wrong');
+
+  state.results.push(ok);
+
+  if (ok) {
+    state.correct++;
+    state.streak++;
+    if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+
+    celebrate(state.streak >= 3 ? 6 : 3);
+
+    var sp = $('starPill');
+    sp.classList.remove('pop'); void sp.offsetWidth; sp.classList.add('pop');
+
+    var fp = $('firePill');
+    fp.classList.remove('pop'); void fp.offsetWidth; fp.classList.add('pop');
+
+    if (state.streak === 3 || state.streak === 5 || state.streak === 7 || state.streak === 10) {
+      showStreakToast(state.streak);
+    }
+
+    var praise;
+    if (state.streak >= 5) praise = '🤩 ВОТ ЭТО СЕРИЯ! Ты супер!';
+    else if (state.streak >= 3) praise = '😄 Отлично! Серия растёт!';
+    else if (state.streak === 2) praise = '😊 Два подряд! Так держать!';
+    else praise = '✅ Верно! Молодец!';
+
+    setFeedback(true, praise);
+
+  } else {
+    state.streak = 0;
+    setFeedback(false, '❌ Неверно. Правильный ответ: <b>' + escapeHTML(t.correct) + '</b>');
+  }
+
+  renderDots();
+  updateHUD();
+  updateHintButton();
+
+  var nb = $('nextBtn');
+  nb.textContent = (state.current === TASKS.length - 1)
+    ? '🏁 Показать результат'
+    : '➡️ Далее';
+  nb.classList.remove('hidden');
+}
+
+function setFeedback(ok, html) {
+  var fb = $('feedbackBox');
+  fb.className = 'feedback ' + (ok ? 'ok' : 'no');
+  fb.innerHTML = html;
+  fb.classList.remove('hidden');
+}
+
+/* ====================================================
+   СЛЕДУЮЩЕЕ ЗАДАНИЕ
+   ==================================================== */
+$('nextBtn').addEventListener('click', function() {
+  if (state.current < TASKS.length - 1) {
+    state.current++;
+    renderTask();
+  } else {
+    showResult();
+  }
+});
+
+/* ====================================================
+   ФИНАЛЬНЫЙ ЭКРАН
+   ==================================================== */
+function getRank(correct, total) {
+  var p = correct / total;
+  if (p >= 0.99) return {
+    icon: '🏆', name: 'Мастер горячих клавиш',
+    color: '#F57F17', bg: '#FFFDE7',
+    text: 'Все 10 заданий без ошибок! Ты знаешь горячие клавиши на отлично!'
+  };
+  if (p >= 0.8) return {
+    icon: '🦅', name: 'Эксперт',
+    color: '#2E7D32', bg: '#E8F5E9',
+    text: 'Отличный результат! Ты уверенно владеешь горячими клавишами.'
+  };
+  if (p >= 0.6) return {
+    icon: '🐥', name: 'Знаток',
+    color: '#1565C0', bg: '#E3F2FD',
+    text: 'Хорошо! Основные комбинации ты знаешь. Повтори остальные — и будет отлично!'
+  };
+  if (p >= 0.4) return {
+    icon: '🐣', name: 'Ученик',
+    color: '#EF6C00', bg: '#FFF3E0',
+    text: 'Неплохо для начала! Пройди памятку ещё раз и попробуй снова.'
+  };
+  return {
+    icon: '🥚', name: 'Новичок',
+    color: '#607D8B', bg: '#ECEFF1',
+    text: 'Не переживай! Посмотри памятку внимательно и попробуй ещё раз — всё получится!'
+  };
+}
+
+function bigStars(correct, total) {
+  var p = correct / total;
+  var n;
+  if (p >= 0.9) n = 3;
+  else if (p >= 0.6) n = 2;
+  else if (p >= 0.3) n = 1;
+  else n = 0;
+
+  var s = '';
+  for (var i = 0; i < 3; i++) {
+    s += (i < n) ? '<span style="color:#FFC107">★</span>' : '<span style="color:#CFD8DC">★</span>';
+  }
+  return s;
+}
+
+function showResult() {
+  showScreen('screenResult');
+
+  var total = TASKS.length;
+  var rank = getRank(state.correct, total);
+
+  var miniStars = '';
+  for (var i = 0; i < total; i++) {
+    miniStars += state.results[i] ? '⭐' : '<span style="opacity:.25">⭐</span>';
+  }
+
+  var hintUsed = TOTAL_HINTS - state.hintsLeft;
+  var hintLine = hintUsed === 0
+    ? '💡 Подсказки не использованы — отлично!'
+    : '💡 Использовано подсказок: ' + hintUsed + ' из ' + TOTAL_HINTS;
+
+  var html =
+    '<div class="big-emoji" style="font-size:56px">🎉</div>' +
+    '<h1 style="margin-bottom:10px">Игра завершена!</h1>' +
+    '<div class="result-name">👦 ' + escapeHTML(state.name) + '</div>' +
+
+    '<div class="result-stars">' + bigStars(state.correct, total) + '</div>' +
+    '<div class="result-score">' + state.correct + '</div>' +
+    '<div class="result-of">из ' + total + ' правильных ответов</div>' +
+
+    '<div style="text-align:center; font-size:20px; letter-spacing:1px; margin:6px 0 14px">' +
+      miniStars +
+    '</div>' +
+
+    '<div class="best-streak">🔥 Лучшая серия: ' + state.bestStreak + '</div>' +
+    '<div class="best-streak" style="background:#FFFDE7;border-color:#FFD54F;color:#795548">' +
+      hintLine +
+    '</div>' +
+
+    '<div class="rank" style="border-color:' + rank.color + '; background:' + rank.bg + '">' +
+      '<div class="rank-icon">' + rank.icon + '</div>' +
+      '<div class="rank-name" style="color:' + rank.color + '">' + rank.name + '</div>' +
+      '<div class="rank-text">' + rank.text + '</div>' +
+    '</div>' +
+
+    '<button id="restartBtn" class="btn orange">🔄 Пройти заново</button>';
+
+  $('resultBox').innerHTML = html;
+
+  if (state.correct >= 7) celebrate(14);
+
+  $('restartBtn').addEventListener('click', function() {
+    location.reload();
+  });
+
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
